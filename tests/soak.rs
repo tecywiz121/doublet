@@ -4,14 +4,14 @@ extern crate rand;
 
 use crossbeam_utils::thread;
 
-use doublet::{OwnedDoublet, Writer, Reader};
+use doublet::{OwnedDoublet, Reader, Writer};
 
 use rand::Rng;
 
 use std::collections::HashSet;
 use std::mem;
-use std::time::{Instant, Duration};
 use std::slice;
+use std::time::{Duration, Instant};
 
 fn rand_sleep() {
     let mut rng = rand::thread_rng();
@@ -98,12 +98,12 @@ fn soak() {
         let mut handles = vec![];
 
         // Create writer thread.
-        handles.push(scope.spawn(move || { write(writer, end) }));
+        handles.push(scope.spawn(move || write(writer, end)));
 
         // Create reader threads.
         for _ in 0..16 {
             let reader = owned.reader();
-            handles.push(scope.spawn(move || { read(reader, end) }));
+            handles.push(scope.spawn(move || read(reader, end)));
         }
 
         let counts = handles

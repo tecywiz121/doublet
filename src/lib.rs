@@ -22,8 +22,8 @@ impl OwnedDoublet {
     pub fn new(size: usize) -> OwnedDoublet {
         Self {
             header: Header {
-            toggle: ToggleCount::default(),
-            remaining_readers: AtomicUsize::new(0),
+                toggle: ToggleCount::default(),
+                remaining_readers: AtomicUsize::new(0),
             },
 
             left_buffer: vec![0; size],
@@ -348,7 +348,10 @@ mod tests {
             let mut guard = writer.try_lock().unwrap();
 
             assert_eq!(guard.writing_to, Side::Right);
-            assert_eq!(usize::max_value(), owned.header.remaining_readers.load(Ordering::SeqCst));
+            assert_eq!(
+                usize::max_value(),
+                owned.header.remaining_readers.load(Ordering::SeqCst)
+            );
 
             guard[0] = 55;
 
@@ -401,7 +404,10 @@ mod tests {
             let mut guard = writer.try_lock().unwrap();
 
             assert_eq!(guard.writing_to, Side::Right);
-            assert_eq!(usize::max_value(), owned.header.remaining_readers.load(Ordering::SeqCst));
+            assert_eq!(
+                usize::max_value(),
+                owned.header.remaining_readers.load(Ordering::SeqCst)
+            );
 
             guard[0] = 55;
 
@@ -445,7 +451,10 @@ mod tests {
         let mut wr_guard = writer.try_lock().unwrap();
 
         assert_eq!(wr_guard.writing_to, Side::Right);
-        assert_eq!(usize::max_value(), owned.header.remaining_readers.load(Ordering::SeqCst));
+        assert_eq!(
+            usize::max_value(),
+            owned.header.remaining_readers.load(Ordering::SeqCst)
+        );
 
         wr_guard[0] = 55;
 
@@ -457,7 +466,10 @@ mod tests {
             count: 0,
         };
         assert_eq!(state, owned.header.toggle.load(Ordering::SeqCst));
-        assert_eq!(usize::max_value(), owned.header.remaining_readers.load(Ordering::SeqCst));
+        assert_eq!(
+            usize::max_value(),
+            owned.header.remaining_readers.load(Ordering::SeqCst)
+        );
 
         // Flip the active buffer
         wr_guard.activate();
@@ -469,6 +481,5 @@ mod tests {
 
         assert_eq!(state, owned.header.toggle.load(Ordering::SeqCst));
         assert_eq!(0, owned.header.remaining_readers.load(Ordering::SeqCst));
-
     }
 }
